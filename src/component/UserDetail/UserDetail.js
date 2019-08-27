@@ -1,14 +1,18 @@
 import React,{useState,useEffect,useRef} from 'react';
 import './UserDetail.css';
+import { useGlobalState } from "../../useGlobalState";
+
 
 function UserDetail(props) {
-  const [fName,updateFName]=useState(props.selectedUser.fName)
-  const [lName,updateLName]=useState(props.selectedUser.lName)
-  const [id,updateId]=useState(props.selectedUser.id)
+  const [state, dispatch] = useGlobalState();
+
+  const [fName,updateFName]=useState(state.selectedUser.fName)
+  const [lName,updateLName]=useState(state.selectedUser.lName)
+  const [id,updateId]=useState(state.selectedUser.id)
   
   function update()
   {
-    props.onUpdate({fName,lName,id});
+    dispatch({ type: "UPDATE_SELECTED_USER", payload:{fName,lName,id} })
     console.log(iref.current.value)
   }
   function changeFName(e)
@@ -20,10 +24,10 @@ function UserDetail(props) {
     updateLName(e.target.value);
   }
   useEffect(()=>{
-    updateFName(props.selectedUser.fName);
-    updateLName(props.selectedUser.lName);
-    updateId(props.selectedUser.id);
-  },[props])
+    updateFName(state.selectedUser.fName);
+    updateLName(state.selectedUser.lName);
+    updateId(state.selectedUser.id);
+  },[state])
 
   const iref=useRef();
 

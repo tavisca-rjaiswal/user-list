@@ -1,44 +1,44 @@
 import React,{useState,useEffect} from 'react';
 import './App.css';
-import UserList from './component/UserList/UserList'
-import UserDetail from './component/UserDetail/UserDetail'
+import UserApp from './component/UserApp/UserApp'
+import { Provider } from "./useGlobalState";
+
+function reducer(state, action) {
+
+  switch (action.type) {
+    case "SET_USER_ID":
+      let selectedUser=state.userList.find((ele)=>
+      {
+        if(ele.id==action.payload)
+        {
+          return ele;
+        }
+      })
+    return {...state,selectedUser,selectedId:action.payload};
+
+    case "UPDATE_SELECTED_USER":
+      return {...state, userList:state.userList.map(user => (user.id === action.payload.id ? action.payload : user)),selectedUser:action.payload};
+    
+    default:
+      return state;
+  }
+}
+
+const userListDataArray=[
+  {id: '1', fName:"Rishabh",lName:"Jaiswal"},
+  {id: '2', fName:"Adarsh",lName:"Vidhate"},
+  {id: '3', fName:"Yash",lName:"Mundada"},
+  {id: '4', fName:"Silkesh",lName:"Harrison"}
+]
+
+const initialState = {fname:"",lname:"",userList:userListDataArray,selectedId:userListDataArray[0].id, selectedUser:userListDataArray[0]};
 
 function App() {
-  const userListDataArray=[
-    {id: '1', fName:"Rishabh",lName:"Jaiswal"},
-    {id: '2', fName:"Adarsh",lName:"Vidhate"},
-    {id: '3', fName:"Yash",lName:"Mundada"},
-    {id: '4', fName:"Silkesh",lName:"Harrison"}
-  ]
-
-  const [userListData,setUserListData]=useState(userListDataArray);
-  const [selectedId,setSelectedId]=useState(1);
-  const [selectedItem,setSelectedItem]=useState(userListData[0]);
-  
-  const updateUserList = (newValue) =>
-  {
-    setUserListData(userListData.map(user => (user.id === newValue.id ? newValue : user)));
-  }
-
-  const updateSelectedId=(newValue)=>{
-    setSelectedId(newValue);
-  }
-
-  useEffect(()=>{
-    setSelectedItem(userListData.find((ele)=>
-    {
-      if(ele.id==selectedId)
-      {
-        return ele;
-      }
-    }))
-  },[selectedId,userListData])
 
   return (
-    <div className="App">
-      <UserList userList={userListData} selectId={updateSelectedId}/>
-      <UserDetail selectedUser={selectedItem} onUpdate={updateUserList} ></UserDetail>
-    </div>
+    <Provider reducer={reducer} initialState={initialState}>
+      <UserApp></UserApp>
+    </Provider>
   );
 }
 
