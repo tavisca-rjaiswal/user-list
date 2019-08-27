@@ -1,0 +1,17 @@
+.detail
+{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 50px;
+}
+.detail input
+{
+    margin: 20px 0px;
+    height: 30px;
+}
+.detail button
+{
+    margin: 20px 0px;
+    padding: 10px;
+}
